@@ -1,68 +1,35 @@
-<!-- public/index.html -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Institución - Home</title>
-  <!-- Tailwind CDN -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home – Clima y Buscador</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-800">
-  <header class="bg-white shadow">
-    <div class="container mx-auto p-4 flex justify-between items-center">
-      <h1 class="text-2xl font-semibold">Institución - Web sobre IA</h1>
-      <nav>
-        <a class="mr-4" href="/index.html">Home</a>
-        <a class="mr-4" href="/cargar_alumno.html">Cargar Alumno</a>
-        <a class="mr-4" href="/listado_alumnos.html">Listado de Alumnos</a>
-        <a class="mr-4" href="/historia.html">Historia</a>
-        <a href="/unidad6.html">Unidad 6 - IA Generativa</a>
-      </nav>
-    </div>
+<body class="bg-gray-100 text-gray-900 p-6">
+
+  <header class="text-center mb-10">
+    <h1 class="text-3xl font-bold">Aplicación Web – Home</h1>
+    <p class="text-lg text-gray-600">Widget de Clima + Buscador de Ciudades</p>
   </header>
 
-  <main class="container mx-auto p-6">
-    <section class="grid md:grid-cols-2 gap-6">
-      <div class="bg-white p-4 rounded shadow">
-        <h2 class="text-xl font-semibold mb-2">Clima actual</h2>
-        <div id="weather-widget" class="text-sm">
-          <p>Ingrese una ciudad para ver el clima</p>
-          <input id="city-input" class="border p-2 rounded w-full my-2" placeholder="Ej: Córdoba, AR" />
-          <button id="search-btn" class="bg-blue-600 text-white px-4 py-2 rounded">Buscar</button>
-          <div id="weather-result" class="mt-4"></div>
-        </div>
-      </div>
+  <main class="max-w-xl mx-auto bg-white shadow-md rounded-2xl p-6 space-y-6">
 
-      <div class="bg-white p-4 rounded shadow">
-        <h2 class="text-xl font-semibold mb-2">Buscador rápido</h2>
-        <p>Busca alumnos por nombre o filtra por curso.</p>
-        <input id="quick-search" class="border p-2 rounded w-full my-2" placeholder="Buscar alumno..." />
-        <div id="search-list" class="mt-3"></div>
-        <button id="refresh-list" class="mt-3 bg-gray-200 px-3 py-1 rounded">Refrescar alumnos</button>
-      </div>
-    </section>
+    <!-- Buscador de ciudad -->
+    <div class="space-y-3">
+      <h2 class="text-xl font-semibold">Buscar clima por ciudad</h2>
+      <input id="buscarInput" type="text" placeholder="Ejemplo: Buenos Aires" class="w-full border p-3 rounded-lg">
+      <button id="buscarBtn" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">Buscar</button>
+    </div>
+
+    <!-- Resultado del clima -->
+    <div id="resultado" class="mt-4 p-4 bg-gray-50 rounded-lg text-center text-gray-700">
+      <p>Esperando búsqueda...</p>
+    </div>
+
   </main>
 
-  <script src="/js/weather.js"></script>
-  <script>
-    // Quick search behaviour
-    document.getElementById('refresh-list').addEventListener('click', async () => {
-      const res = await fetch('/api/students');
-      const data = await res.json();
-      const container = document.getElementById('search-list');
-      container.innerHTML = data.slice(0,6).map(s => `<div class="p-2 border-b">${s.name} — ${s.email} — ${s.course_name||'Sin curso'}</div>`).join('');
-    });
-
-    document.getElementById('quick-search').addEventListener('input', async (e) => {
-      const q = e.target.value.toLowerCase();
-      if (!q) return;
-      const res = await fetch('/api/students');
-      const data = await res.json();
-      const found = data.filter(s => (s.name||'').toLowerCase().includes(q)).slice(0,6);
-      const container = document.getElementById('search-list');
-      container.innerHTML = found.map(s => `<div class="p-2 border-b">${s.name} — ${s.email} — ${s.course_name||'Sin curso'}</div>`).join('');
-    });
-  </script>
+  <!-- Script clima.js -->
+  <script src="./js/clima.js"></script>
 </body>
 </html>
