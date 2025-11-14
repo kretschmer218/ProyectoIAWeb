@@ -12,29 +12,30 @@ const PORT = process.env.PORT || 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Servir carpeta public
+// Servir carpeta public (CSS, JS, imágenes, HTML estáticos)
 app.use(express.static(path.join(__dirname, "public")));
 
-// Servir HTML principal desde la raíz
+// --------------------------
+// SERVIR HTML DESDE /PUBLIC
+// --------------------------
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.join(__dirname, "public", "index.html"));  // <-- CAMBIAR AQUÍ
 });
 
-// Otras páginas del sitio
 app.get("/cargar-alumno", (req, res) => {
-    res.sendFile(path.join(__dirname, "cargar-alumno.html"));
+    res.sendFile(path.join(__dirname, "public", "cargar-alumno.html"));  // <-- CAMBIAR AQUÍ
 });
 
 app.get("/alumnos", (req, res) => {
-    res.sendFile(path.join(__dirname, "alumnos.html"));
+    res.sendFile(path.join(__dirname, "public", "alumnos.html"));  // <-- CAMBIAR AQUÍ
 });
 
 app.get("/historia", (req, res) => {
-    res.sendFile(path.join(__dirname, "historia.html"));
+    res.sendFile(path.join(__dirname, "public", "historia.html"));  // <-- CAMBIAR AQUÍ
 });
 
 app.get("/unidad6", (req, res) => {
-    res.sendFile(path.join(__dirname, "unidad6.html"));
+    res.sendFile(path.join(__dirname, "public", "unidad6.html"));  // <-- CAMBIAR AQUÍ
 });
 
 // Endpoint de clima
