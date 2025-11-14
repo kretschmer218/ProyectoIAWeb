@@ -15,6 +15,28 @@ const __dirname = path.dirname(__filename);
 // Servir carpeta public
 app.use(express.static(path.join(__dirname, "public")));
 
+// Servir HTML principal desde la raíz
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "index.html"));
+});
+
+// Otras páginas del sitio
+app.get("/cargar-alumno", (req, res) => {
+    res.sendFile(path.join(__dirname, "cargar-alumno.html"));
+});
+
+app.get("/alumnos", (req, res) => {
+    res.sendFile(path.join(__dirname, "alumnos.html"));
+});
+
+app.get("/historia", (req, res) => {
+    res.sendFile(path.join(__dirname, "historia.html"));
+});
+
+app.get("/unidad6", (req, res) => {
+    res.sendFile(path.join(__dirname, "unidad6.html"));
+});
+
 // Endpoint de clima
 app.get("/api/clima", async (req, res) => {
     const ciudad = req.query.ciudad;

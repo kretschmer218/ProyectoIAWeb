@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Editar Alumno</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 p-6">
+  <div class="max-w-xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">Editar Alumno</h1>
+    <form action="/alumnos/edit/<%= alumno.id %>" method="POST" class="space-y-3">
+      <input name="nombre" value="<%= alumno.nombre %>" required placeholder="Nombre" class="w-full p-2 border rounded" />
+      <input name="apellido" value="<%= alumno.apellido %>" required placeholder="Apellido" class="w-full p-2 border rounded" />
+      <input name="edad" value="<%= alumno.edad %>" type="number" required placeholder="Edad" class="w-full p-2 border rounded" />
+      <input name="curso" value="<%= alumno.curso %>" required placeholder="Curso" class="w-full p-2 border rounded" />
+      <input name="email" value="<%= alumno.email %>" type="email" required placeholder="Email" class="w-full p-2 border rounded" />
+      <div class="flex justify-between">
+        <a href="/alumnos" class="px-4 py-2 border rounded">Volver</a>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Actualizar</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
