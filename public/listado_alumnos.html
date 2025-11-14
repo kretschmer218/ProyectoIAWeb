@@ -1,0 +1,70 @@
+<!-- public/listado_alumnos.html -->
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Listado de Alumnos</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+<div class="container mx-auto p-6">
+  <h1 class="text-2xl mb-4">Listado de Alumnos</h1>
+  <div class="mb-4">
+    <select id="filter-course" class="border p-2">
+      <option value="">-- Todos los cursos --</option>
+    </select>
+    <button id="btn-refresh" class="ml-2 bg-gray-200 px-3 py-1 rounded">Refrescar</button>
+  </div>
+  <table class="w-full bg-white shadow rounded">
+    <thead><tr class="bg-gray-100"><th class="p-2">ID</th><th>Nombre</th><th>Email</th><th>Edad</th><th>Curso</th><th>Acciones</th></tr></thead>
+    <tbody id="table-body"></tbody>
+  </table>
+</div>
+
+<script>
+async function loadCourses() {
+  const res = await fetch('/api/courses');
+  const courses = await res.json();
+  const sel = document.getElementById('filter-course');
+  sel.innerHTML = '<option value="">-- Todos los cursos --</option>' + courses.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+}
+async function loadStudents(courseName) {
+  const url = courseName ? `/api/students?course=${encodeURIComponent(courseName)}` : '/api/students';
+  const res = await fetch(url);
+  const data = await res.json();
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = data.map(s => `<tr class="border-t"><td class="p-2">${s.id}</td><td>${s.name}</td><td>${s.email}</td><td>${s.age||''}</td><td>${s.course_name||''}</td><td>
+    <button onclick="edit(${s.id})" class="mr-2 bg-yellow-300 px-2 py-1 rounded">Editar</button>
+    <button onclick="del(${s.id})" class="bg-red-500 text-white px-2 py-1 rounded">Borrar</button>
+  </td></tr>`).join('');
+}
+function edit(id) {
+  const name = prompt('Nuevo nombre (dejar vacío para no modificar):');
+  if (name === null) return;
+  const email = prompt('Nuevo email:');
+  if (email === null) return;
+  // very basic update — in real app open modal with full fields
+  fetch('/api/students/' + id, {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ name, email, age: null, course_id: null })
+  }).then(r => {
+    if (r.ok) loadStudents(document.getElementById('filter-course').value);
+    else r.json().then(x=>alert(x.error||'Error'));
+  });
+}
+function del(id) {
+  if (!confirm('¿Eliminar alumno?')) return;
+  fetch('/api/students/' + id, { method:'DELETE' }).then(r => {
+    if (r.ok) loadStudents(document.getElementById('filter-course').value);
+  });
+}
+
+document.getElementById('btn-refresh').addEventListener('click', () => loadStudents(document.getElementById('filter-course').value));
+document.getElementById('filter-course').addEventListener('change', (e) => loadStudents(e.target.value));
+
+loadCourses().then(() => loadStudents());
+</script>
+</body>
+</html>

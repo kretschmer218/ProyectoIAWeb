@@ -1,0 +1,60 @@
+<!-- public/cargar_alumno.html -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cargar Alumno</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto p-6">
+    <h1 class="text-2xl mb-4">Cargar Alumno</h1>
+    <form id="alumno-form" class="bg-white p-6 rounded shadow max-w-lg">
+      <label class="block mb-2">Nombre <input id="name" class="border p-2 w-full" required></label>
+      <label class="block mb-2">Email <input id="email" type="email" class="border p-2 w-full" required></label>
+      <label class="block mb-2">Edad <input id="age" type="number" min="10" max="120" class="border p-2 w-full"></label>
+      <label class="block mb-2">Curso
+        <select id="course_id" class="border p-2 w-full"></select>
+      </label>
+      <div id="form-error" class="text-red-600 my-2"></div>
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Guardar</button>
+    </form>
+  </div>
+
+  <script>
+    async function loadCourses() {
+      const res = await fetch('/api/courses');
+      const courses = await res.json();
+      const sel = document.getElementById('course_id');
+      sel.innerHTML = '<option value="">-- Seleccione --</option>' + courses.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    }
+    loadCourses();
+
+    document.getElementById('alumno-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const age = parseInt(document.getElementById('age').value) || null;
+      const course_id = document.getElementById('course_id').value || null;
+      const errDiv = document.getElementById('form-error');
+      errDiv.innerText = '';
+
+      // client-side validation
+      if (!name) return errDiv.innerText = 'El nombre es obligatorio';
+      if (!email || !/^\S+@\S+\.\S+$/.test(email)) return errDiv.innerText = 'Email inválido';
+      if (!course_id) return errDiv.innerText = 'Seleccione un curso';
+
+      const payload = { name, email, age, course_id: parseInt(course_id) };
+      const res = await fetch('/api/students', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      if (res.ok) {
+        alert('Alumno guardado');
+        window.location.href = '/listado_alumnos.html';
+      } else {
+        const x = await res.json();
+        errDiv.innerText = x.error || 'Error al guardar';
+      }
+    });
+  </script>
+</body>
+</html>
